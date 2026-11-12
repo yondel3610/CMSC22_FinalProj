@@ -30,25 +30,23 @@
 package application;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
+import ui.SceneManager;
+//import javafx.scene.Scene;
+//import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import manager.ManagerDashboard;
+//import manager.ManagerDashboard;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-
-        ManagerDashboard dashboard = new ManagerDashboard();
-
-        Scene scene = new Scene(dashboard, 1000, 700);
-
-        stage.setTitle("Donation Management System");
-        stage.setScene(scene);
-        stage.show();
+    	String stylesheet = Main.class.getResource("application.css").toExternalForm();
+    	
+    	SceneManager.init(stage, stylesheet);
+    	SceneManager.showLogin();
+    	stage.show();
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
