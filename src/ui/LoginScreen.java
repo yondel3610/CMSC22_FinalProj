@@ -11,11 +11,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import system.DonationSystem;
 import users.User;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class LoginScreen extends StackPane {
 
     public LoginScreen() {
         getStyleClass().add("login-root");
+
+        Image image = ImageLoader.load("RiceTerracesLLogin.jpg");
+
+        ImageView background = new ImageView(image);
+        background.setPreserveRatio(false);
+        background.fitWidthProperty().bind(widthProperty());
+        background.fitHeightProperty().bind(heightProperty());
 
         Label title = new Label("Donation Management System");
         title.getStyleClass().add("login-title");
@@ -62,7 +71,7 @@ public class LoginScreen extends StackPane {
         card.setMaxWidth(420);
         card.setMaxHeight(Region.USE_PREF_SIZE);
 
-        getChildren().add(card); // StackPane centers the card
+        getChildren().addAll(background, card); // StackPane centers the card
 
         Platform.runLater(usernameField::requestFocus);
     }
