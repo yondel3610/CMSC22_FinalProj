@@ -19,7 +19,7 @@ public class LoginScreen extends StackPane {
     public LoginScreen() {
         getStyleClass().add("login-root");
 
-        Image image = ImageLoader.load("RiceTerracesLLogin.jpg");
+        Image image = ImageLoader.load("RiceTerracesLogin.jpg");
 
         ImageView background = new ImageView(image);
         background.setPreserveRatio(false);
