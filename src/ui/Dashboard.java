@@ -12,6 +12,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import users.User;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize; 
 
 /**
  * Shared layout for every dashboard: welcome header, exit button and a
@@ -29,6 +35,17 @@ public abstract class Dashboard extends BorderPane {
         this.user = user;
         getStyleClass().add("dashboard");
 
+        Image image = ImageLoader.load("Dashboard.jpg");
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+        setBackground(new Background(backgroundImage));
+        
         // Top bar
         Button exitButton = (backAction == null)
                 ? createExitButton("Log out", SceneManager::logout)
