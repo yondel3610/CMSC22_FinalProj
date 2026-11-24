@@ -153,6 +153,18 @@ public class Inventory {
         }
         return total;
     }
+    
+    // Total value of everything in stock (active products only):
+    // sum of stock x unit value, in PHP. Same figure the Inventory screen shows.
+    public double totalProductValue() {
+        double total = 0;
+        for (Product p : products) {
+            if (p.isActive()) {
+                total += stockOf(p.getId()) * p.getUnitValue();
+            }
+        }
+        return total;
+    }
 
     public String statusOf(Product p) {
         int stock = stockOf(p.getId());

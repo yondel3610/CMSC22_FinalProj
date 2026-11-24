@@ -19,15 +19,28 @@ public class ManagerDashboard extends Dashboard {
     @Override
     protected List<Button> createButtons() {
         return List.of(
-            createMenuButton("Add Donation",
+            createMenuButton("Record Donation",
                 () -> new AddDonation(getScene().getWindow()).showAndWait()),
-            createMenuButton("View Donations",
+            createMenuButton("Donation History",
                 () -> new ViewDonations(getScene().getWindow()).showAndWait()),
-            // TODO (Inventory / Product members): replace placeholders
-            createMenuButton("Inventory", () -> showComingSoon("Inventory")),
-            createMenuButton("Products", () -> showComingSoon("Product Management")),
+            // Product catalog + inventory, opened in full edit mode because
+            // canManageProducts() is true for the manager
+            createMenuButton("Products", this::openProducts),
+            createMenuButton("Inventory", this::openInventory),
             createMenuButton("View Clerk\nDashboard", this::openClerkDashboard)
         );
+    }
+
+    private void openProducts() {
+        SceneManager.showModule(new ProductScreen(
+                DonationSystem.getInstance().getInventory(),
+                user.canManageProducts()).getView());
+    }
+
+    private void openInventory() {
+        SceneManager.showModule(new InventoryScreen(
+                DonationSystem.getInstance().getInventory(),
+                user.canManageProducts()).getView());
     }
 
     // gets the manager pick a clerk and see that clerk's dashboard

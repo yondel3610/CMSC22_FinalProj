@@ -11,37 +11,32 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import system.DonationSystem;
 import users.User;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class LoginScreen extends StackPane {
 
     public LoginScreen() {
         getStyleClass().add("login-root");
 
-        Image image = ImageLoader.load("RiceTerracesLogin.jpg");
-
-        ImageView background = new ImageView(image);
-        background.setPreserveRatio(false);
-        background.fitWidthProperty().bind(widthProperty());
-        background.fitHeightProperty().bind(heightProperty());
-
         Label title = new Label("Donation Management System");
         title.getStyleClass().add("login-title");
 
+        Label subtitle = new Label("Log in with your staff account.");
+        subtitle.getStyleClass().add("login-subtitle");
+
         TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
+        VBox usernameGroup = field("Username", usernameField);
 
         PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Password");
+        VBox passwordGroup = field("Password", passwordField);
 
         Label errorLabel = new Label();
         errorLabel.getStyleClass().add("error-label");
+        errorLabel.setWrapText(true);
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
         Button loginButton = new Button("Log in");
-        loginButton.getStyleClass().add("login-button");
+        loginButton.getStyleClass().addAll("primary", "login-button");
         loginButton.setMaxWidth(Double.MAX_VALUE);
         loginButton.setDefaultButton(true); // Enter key triggers login
 
@@ -65,15 +60,23 @@ public class LoginScreen extends StackPane {
             }
         });
 
-        VBox card = new VBox(15, title, usernameField,
-                passwordField, errorLabel, loginButton);
+        VBox header = new VBox(4, title, subtitle);
+
+        VBox card = new VBox(20, header, usernameGroup, passwordGroup, errorLabel, loginButton);
         card.getStyleClass().add("login-card");
-        card.setMaxWidth(420);
+        card.setMaxWidth(380);
         card.setMaxHeight(Region.USE_PREF_SIZE);
 
-        getChildren().addAll(background, card); // StackPane centers the card
+        getChildren().add(card); // StackPane centers the card
 
         Platform.runLater(usernameField::requestFocus);
+    }
+
+    // A small label above its input, so the field is named even after typing.
+    private static VBox field(String labelText, Region input) {
+        Label label = new Label(labelText);
+        label.getStyleClass().add("field-label");
+        return new VBox(6, label, input);
     }
 
     private static void showError(Label label, String message) {

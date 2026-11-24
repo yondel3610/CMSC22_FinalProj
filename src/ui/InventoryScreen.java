@@ -1,7 +1,9 @@
 package ui;
 
+import java.io.IOException;
+import manager.DonationFile;
+import system.DonationSystem;
 import java.util.List;
-
 import inventory.Inventory;
 import inventory.Product;
 import inventory.StockMovement;
@@ -46,9 +48,9 @@ public class InventoryScreen {
     private ComboBox<String> statusFilter;
 
     private Label totalLabel;
-    private Label lowLabel;
-    private Label outLabel;
     private Label valueLabel;
+    private Label moneyLabel;
+    private double monetaryTotal;   // all cash donations, kept apart from product value
 
     private Button restockBtn;
     private Button adjustBtn;
@@ -57,6 +59,7 @@ public class InventoryScreen {
     public InventoryScreen(Inventory inventory, boolean isManager) {
         this.inventory = inventory;
         this.isManager = isManager;
+        this.monetaryTotal = loadMonetaryTotal();
         buildView();
         refresh();
     }
@@ -71,15 +74,13 @@ public class InventoryScreen {
 
         // summary cards
         totalLabel = new Label("0");
-        lowLabel = new Label("0");
-        outLabel = new Label("0");
         valueLabel = new Label("0.00");
+        moneyLabel = new Label("0.00");
 
         HBox cards = new HBox(12,
                 card(totalLabel, "Active products", "#1a56a0"),
-                card(lowLabel, "Low stock", "#b07d00"),
-                card(outLabel, "Out of stock", "#c62828"),
-                card(valueLabel, "Total estimated value (PHP)", "#2e7d32"));
+                card(valueLabel, "Total product value (PHP)", "#2e7d32"),
+                card(moneyLabel, "Monetary donations (PHP)", "#6a1b9a"));
         cards.setPadding(new Insets(16, 16, 12, 16));
 
         // filters
@@ -232,10 +233,19 @@ public class InventoryScreen {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
+    // Cash donations are read once when the screen opens (they can't change while it is open)
+    private static double loadMonetaryTotal() {
+        try {
+            return DonationFile.totalMonetary();
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+    
     // Data
     public void refresh() {
         ObservableList<Product> items = FXCollections.observableArrayList();
-        int total = 0, low = 0, out = 0;
+        int total = 0;
         double totalValue = 0;
 
         String q = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
@@ -247,13 +257,8 @@ public class InventoryScreen {
                 continue;   // archived products live in the Products screen only
             }
             total++;
+            
             String status = inventory.statusOf(p);
-            if (status.equals(Inventory.STATUS_LOW)) {
-                low++;
-            }
-            if (status.equals(Inventory.STATUS_OUT)) {
-                out++;
-            }
             totalValue += inventory.stockOf(p.getId()) * p.getUnitValue();
 
             boolean show = true;
@@ -273,10 +278,10 @@ public class InventoryScreen {
         }
 
         table.setItems(items);
+        table.refresh();   // refreshes the cells to reread new stock after changes
         totalLabel.setText(String.valueOf(total));
-        lowLabel.setText(String.valueOf(low));
-        outLabel.setText(String.valueOf(out));
         valueLabel.setText(String.format("%,.2f", totalValue));
+        moneyLabel.setText(String.format("%,.2f", monetaryTotal));
     }
 
     // Restock / Adjust / Movement log
@@ -323,7 +328,7 @@ public class InventoryScreen {
 
         dialog.showAndWait().ifPresent(qty -> {
             try {
-                inventory.restock(p, qty, "manager");
+                inventory.restock(p, qty, DonationSystem.getInstance().getCurrentUser().getUsername());
                 refresh();
             } catch (IllegalArgumentException ex) {
                 showError(ex.getMessage());
@@ -375,7 +380,7 @@ public class InventoryScreen {
 
         dialog.showAndWait().ifPresent(counted -> {
             try {
-                inventory.adjustStock(p, counted, "manager");
+                inventory.adjustStock(p, counted, DonationSystem.getInstance().getCurrentUser().getUsername());
                 refresh();
             } catch (IllegalArgumentException ex) {
                 showError(ex.getMessage());
