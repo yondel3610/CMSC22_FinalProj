@@ -1,1 +1,63 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* ---------- Module screens ---------- */
+.screen {
+    -fx-background-color: white;
+}
+
+.screen-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F4F2F;
+}
+
+.primary-button {
+    -fx-background-color: #4C7A4A;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #3F673D;
+}
+
+.primary-button:disabled {
+    -fx-opacity: 0.5;
+}
+
+.stat-card {
+    -fx-background-color: #F3F6F1;
+    -fx-padding: 16 22 16 22;
+    -fx-background-radius: 10;
+    -fx-border-color: #D5DDD0;
+    -fx-border-radius: 10;
+}
+
+.stat-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F4F2F;
+}
+
+.stat-caption {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+}
+
+.table-row-cell.row-low {
+    -fx-background-color: #FFF4D6;
+}
+
+.table-row-cell.row-out {
+    -fx-background-color: #FBE3E1;
+}
+
+.table-row-cell.row-archived {
+    -fx-opacity: 0.55;
+}
+
+.table-row-cell.row-low:selected,
+.table-row-cell.row-out:selected,
+.table-row-cell.row-archived:selected {
+    -fx-background-color: -fx-selection-bar;
+}

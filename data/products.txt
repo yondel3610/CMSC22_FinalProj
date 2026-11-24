@@ -1,0 +1,3 @@
+P1001|Rice|Well-milled rice for relief packs|Grain|sack|2150.0|10|true
+P1002|Canned Goods|Assorted canned meat, fish and vegetables|Other|pack|45.0|24|true
+P1003|Seedlings|Vegetable seedlings for backyard farming|Seed|pack|30.0|20|true
